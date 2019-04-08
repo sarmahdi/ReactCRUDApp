@@ -7,7 +7,8 @@ class App extends Component {
   state = {
     data: [],
     id: 0,
-    message: null,
+    product: null,
+    productType: null,
     intervalIsSet: false,
     idToDelete: null,
     idToUpdate: null,
@@ -49,7 +50,7 @@ class App extends Component {
 
   // our put method that uses our backend api
   // to create new query into our data base
-  putDataToDB = message => {
+  putDataToDB = (product,productType) => {
     let currentIds = this.state.data.map(data => data.id);
     let idToBeAdded = 0;
     while (currentIds.includes(idToBeAdded)) {
@@ -58,7 +59,8 @@ class App extends Component {
 
     axios.post("http://localhost:3001/api/putData", {
       id: idToBeAdded,
-      message: message
+      product: product,
+      productType : productType
     });
   };
 
@@ -83,7 +85,7 @@ class App extends Component {
 
   // our update method that uses our backend api
   // to overwrite existing data base information
-  updateDB = (idToUpdate, updateToApply) => {
+  updateDB = (idToUpdate, updateToApply, updateTypeToApply) => {
     let objIdToUpdate = null;
     this.state.data.forEach(dat => {
       if (dat.id == idToUpdate) {
@@ -93,7 +95,7 @@ class App extends Component {
 
     axios.post("http://localhost:3001/api/updateData", {
       id: objIdToUpdate,
-      update: { message: updateToApply }
+      update: { product: updateToApply,productType: updateTypeToApply }
     });
   };
 
@@ -109,21 +111,30 @@ class App extends Component {
           {data.length <= 0
             ? "NO DB ENTRIES YET"
             : data.map(dat => (
-                <li style={{ padding: "10px" }} key={data.message}>
+                <li style={{ padding: "10px" }} key={data.product}>
                   <span style={{ color: "gray" }}> id: </span> {dat.id} <br />
                   <span style={{ color: "gray" }}> data: </span>
-                  {dat.message}
+                  {dat.product} <br />
+                   <span style={{ color: "gray" }}> data: </span>
+                    {dat.productType}
                 </li>
               ))}
         </ul>
         <div style={{ padding: "10px" }}>
           <input
             type="text"
-            onChange={e => this.setState({ message: e.target.value })}
+            onChange={e => this.setState({ product: e.target.value })}
             placeholder="add something in the database"
             style={{ width: "200px" }}
           />
-          <button onClick={() => this.putDataToDB(this.state.message)}>
+          <input
+            type="text"
+            onChange={e => this.setState({ productType: e.target.value })}
+            placeholder="Give the product a productType in the database"
+            style={{ width: "200px" }}
+          />
+
+          <button onClick={() => this.putDataToDB(this.state.product,this.state.productType)}>
             ADD
           </button>
         </div>
@@ -151,9 +162,17 @@ class App extends Component {
             onChange={e => this.setState({ updateToApply: e.target.value })}
             placeholder="put new value of the item here"
           />
+
+          <input
+            type="text"
+            style={{ width: "200px" }}
+            onChange={e => this.setState({ updateTypeToApply: e.target.value })}
+            placeholder="put new Type of the item here"
+          />
+
           <button
             onClick={() =>
-              this.updateDB(this.state.idToUpdate, this.state.updateToApply)
+              this.updateDB(this.state.idToUpdate, this.state.updateToApply, this.state.updateTypeToApply)
             }
           >
             UPDATE

@@ -6,9 +6,8 @@ const Schema = mongoose.Schema;
 const DataSchema = new Schema(
   {
     id: Number,
-    message: String,
-    messageType : String,
-    
+    product: String,
+    productType : String    
   },
   { timestamps: true }
 );

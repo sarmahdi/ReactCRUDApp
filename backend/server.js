@@ -70,16 +70,16 @@ router.delete("/deleteData", (req, res) => {
 router.post("/putData", (req, res) => {
   let data = new Data();
 
-  const { id, message } = req.body;
+  const { id, product } = req.body;
 
-  if ((!id && id !== 0) || !message) {
+  if ((!id && id !== 0) || !product) {
     return res.json({
       success: false,
       error: "INVALID INPUTS"
     });
   }
-  data.message = message;
-  data.messageType = messageType
+  data.product = product;
+  data.productType = productType
   data.id = id;
   data.save(err => {
     if (err) return res.json({ success: false, error: err });
